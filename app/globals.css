@@ -6,42 +6,42 @@
   * {
     @apply border-gray-200;
   }
-  
+
   body {
-    @apply bg-background text-gray-900;
+    @apply bg-white text-gray-900;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors duration-200 font-medium;
+    @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium;
   }
-  
+
   .btn-secondary {
     @apply bg-gray-200 text-gray-900 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors duration-200 font-medium;
   }
-  
+
   .btn-destructive {
     @apply bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors duration-200 font-medium;
   }
-  
+
   .card {
-    @apply bg-surface rounded-lg p-4 shadow-card border border-gray-100;
+    @apply bg-white rounded-lg p-4 shadow-md border border-gray-100;
   }
-  
+
   .input-bordered {
-    @apply border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+    @apply border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
   }
-  
+
   .status-active {
-    @apply bg-accent text-white px-2 py-1 rounded-sm text-xs font-medium;
+    @apply bg-green-500 text-white px-2 py-1 rounded-sm text-xs font-medium;
   }
-  
+
   .status-inactive {
     @apply bg-gray-400 text-white px-2 py-1 rounded-sm text-xs font-medium;
   }
-  
+
   .status-pending {
     @apply bg-yellow-500 text-white px-2 py-1 rounded-sm text-xs font-medium;
   }

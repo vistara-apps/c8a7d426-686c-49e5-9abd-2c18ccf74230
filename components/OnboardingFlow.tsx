@@ -51,42 +51,125 @@ export function OnboardingFlow() {
     if (currentStep === 1) {
       // Vehicle information step
       if (!vehicleDetails || !licenseNumber) return;
-      
+
       setIsSubmitting(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setIsSubmitting(false);
-      
-      // Mark current step as completed
-      const updatedSteps = [...steps];
-      updatedSteps[currentStep].completed = true;
-      setSteps(updatedSteps);
+
+      try {
+        // Create driver profile via API
+        const response = await fetch('/api/drivers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: 'demo-driver', // In production, get from authenticated user
+            vehicleDetails,
+            licenseNumber,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to create driver profile');
+        }
+
+        const profileData = await response.json();
+        console.log('Driver profile created:', profileData);
+
+        setIsSubmitting(false);
+
+        // Mark current step as completed
+        const updatedSteps = [...steps];
+        updatedSteps[currentStep].completed = true;
+        setSteps(updatedSteps);
+      } catch (error) {
+        console.error('Error creating driver profile:', error);
+        setIsSubmitting(false);
+        // In production, show error message to user
+        return;
+      }
     }
-    
+
     if (currentStep === 2) {
       // Verification step
       setIsSubmitting(true);
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setIsSubmitting(false);
-      
-      const updatedSteps = [...steps];
-      updatedSteps[currentStep].completed = true;
-      setSteps(updatedSteps);
+
+      try {
+        // Verify driver profile via API
+        const response = await fetch('/api/drivers', {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: 'demo-driver', // In production, get from authenticated user
+            action: 'verify',
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to verify driver');
+        }
+
+        const verifiedProfile = await response.json();
+        console.log('Driver verified:', verifiedProfile);
+
+        setIsSubmitting(false);
+
+        const updatedSteps = [...steps];
+        updatedSteps[currentStep].completed = true;
+        setSteps(updatedSteps);
+      } catch (error) {
+        console.error('Error verifying driver:', error);
+        setIsSubmitting(false);
+        // In production, show error message to user
+        return;
+      }
     }
-    
+
     if (currentStep === 3) {
       // NFT minting step
       setIsSubmitting(true);
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setIsSubmitting(false);
-      
-      const updatedSteps = [...steps];
-      updatedSteps[currentStep].completed = true;
-      setSteps(updatedSteps);
-      
-      // Onboarding complete
-      return;
+
+      try {
+        // Mint driver NFT via API
+        const response = await fetch('/api/nft', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: 'demo-driver', // In production, get from authenticated user
+            driverProfile: {
+              vehicleDetails,
+              licenseNumber,
+              verificationStatus: 'verified',
+            },
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to mint NFT');
+        }
+
+        const nftData = await response.json();
+        console.log('NFT minted:', nftData);
+
+        setIsSubmitting(false);
+
+        const updatedSteps = [...steps];
+        updatedSteps[currentStep].completed = true;
+        setSteps(updatedSteps);
+
+        // Onboarding complete
+        return;
+      } catch (error) {
+        console.error('Error minting NFT:', error);
+        setIsSubmitting(false);
+        // In production, show error message to user
+        return;
+      }
     }
-    
+
     setCurrentStep(currentStep + 1);
   };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from './Card';
 import { MapPin } from 'lucide-react';
 
@@ -14,8 +14,27 @@ interface MapPreviewProps {
 export function MapPreview({ pickup, destination, variant = 'static', className }: MapPreviewProps) {
   const [imageError, setImageError] = useState(false);
 
-  // Mock static map URL - in production, use actual mapping service
-  const mapUrl = pickup && destination 
+  // Use mapping API for route visualization
+  const [routeData, setRouteData] = useState<any>(null);
+  const [isLoadingRoute, setIsLoadingRoute] = useState(false);
+
+  useEffect(() => {
+    if (pickup && destination) {
+      setIsLoadingRoute(true);
+      fetch(`/api/maps?action=route&pickup=${encodeURIComponent(pickup)}&destination=${encodeURIComponent(destination)}`)
+        .then(response => response.json())
+        .then(data => {
+          setRouteData(data);
+          setIsLoadingRoute(false);
+        })
+        .catch(error => {
+          console.error('Error fetching route:', error);
+          setIsLoadingRoute(false);
+        });
+    }
+  }, [pickup, destination]);
+
+  const mapUrl = pickup && destination
     ? `https://via.placeholder.com/400x200/e5e7eb/6b7280?text=Route+Map`
     : `https://via.placeholder.com/400x200/e5e7eb/6b7280?text=Map+Preview`;
 

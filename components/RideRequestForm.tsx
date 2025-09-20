@@ -19,21 +19,44 @@ export function RideRequestForm() {
 
   const handleRequestRide = async () => {
     if (!pickup || !destination) return;
-    
+
     setIsRequesting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsRequesting(false);
-    setShowConfirmation(true);
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setShowConfirmation(false);
-      setPickup('');
-      setDestination('');
-    }, 3000);
+
+    try {
+      // Create ride request via API
+      const response = await fetch('/api/rides', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          requesterId: 'demo-user', // In production, get from authenticated user
+          pickupLocation: pickup,
+          dropoffLocation: destination,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create ride request');
+      }
+
+      const rideData = await response.json();
+      console.log('Ride created:', rideData);
+
+      setIsRequesting(false);
+      setShowConfirmation(true);
+
+      // Reset form after 3 seconds
+      setTimeout(() => {
+        setShowConfirmation(false);
+        setPickup('');
+        setDestination('');
+      }, 3000);
+    } catch (error) {
+      console.error('Error requesting ride:', error);
+      setIsRequesting(false);
+      // In production, show error message to user
+    }
   };
 
   const handleQuickLocation = (location: string) => {

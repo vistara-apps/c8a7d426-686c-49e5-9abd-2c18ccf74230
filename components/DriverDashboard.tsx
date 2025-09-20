@@ -45,12 +45,35 @@ export function DriverDashboard() {
 
   const handleAcceptRide = async (rideId: string) => {
     setAcceptingRide(rideId);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setAcceptingRide(null);
-    // In a real app, this would update the ride status and navigate to ride details
+
+    try {
+      // Accept ride via API
+      const response = await fetch('/api/rides', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          rideId,
+          driverId: 'demo-driver', // In production, get from authenticated user
+          action: 'accept',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to accept ride');
+      }
+
+      const updatedRide = await response.json();
+      console.log('Ride accepted:', updatedRide);
+
+      setAcceptingRide(null);
+      // In production, navigate to ride details or update UI
+    } catch (error) {
+      console.error('Error accepting ride:', error);
+      setAcceptingRide(null);
+      // In production, show error message to user
+    }
   };
 
   return (

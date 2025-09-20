@@ -115,22 +115,263 @@ npm run dev
 - Proposal creation
 - Governance statistics
 
-## API Integration
+## API Documentation
 
-### Farcaster Integration
-- User identity via MiniKit
-- Frame-native experience
-- Social features and sharing
+### Users API (`/api/users`)
 
-### Base Wallet
-- Secure payment processing
-- NFT minting for driver credentials
-- Transaction management
+#### GET `/api/users`
+Get all users or filter by farcasterId.
 
-### Mapping Services
-- Location geocoding
-- Route visualization
-- Distance calculation
+**Query Parameters:**
+- `farcasterId` (optional): Filter by specific user
+
+**Response:**
+```json
+[
+  {
+    "farcasterId": "user123",
+    "walletAddress": "0x...",
+    "role": "rider",
+    "rating": 4.8
+  }
+]
+```
+
+#### POST `/api/users`
+Create a new user.
+
+**Request Body:**
+```json
+{
+  "farcasterId": "user123",
+  "walletAddress": "0x...",
+  "role": "rider"
+}
+```
+
+#### PUT `/api/users`
+Update user information.
+
+**Request Body:**
+```json
+{
+  "farcasterId": "user123",
+  "rating": 4.9
+}
+```
+
+### Rides API (`/api/rides`)
+
+#### GET `/api/rides`
+Get rides with optional filtering.
+
+**Query Parameters:**
+- `status`: Filter by ride status (requested, accepted, in_progress, completed, cancelled)
+- `requesterId`: Filter by rider
+- `driverId`: Filter by driver
+
+#### POST `/api/rides`
+Create a new ride request.
+
+**Request Body:**
+```json
+{
+  "requesterId": "user123",
+  "pickupLocation": "Times Square, New York",
+  "dropoffLocation": "Central Park, New York"
+}
+```
+
+#### PATCH `/api/rides`
+Update ride status (accept, start, complete, cancel).
+
+**Request Body:**
+```json
+{
+  "rideId": "ride_123",
+  "driverId": "driver456",
+  "action": "accept"
+}
+```
+
+### Drivers API (`/api/drivers`)
+
+#### GET `/api/drivers`
+Get driver profiles.
+
+**Query Parameters:**
+- `userId`: Filter by specific driver
+- `status`: Filter by verification status
+
+#### POST `/api/drivers`
+Create driver profile.
+
+**Request Body:**
+```json
+{
+  "userId": "driver123",
+  "vehicleDetails": "2020 Toyota Camry",
+  "licenseNumber": "DL123456"
+}
+```
+
+#### PATCH `/api/drivers`
+Update driver profile (verify, activate, deactivate).
+
+**Request Body:**
+```json
+{
+  "userId": "driver123",
+  "action": "verify"
+}
+```
+
+### Governance API (`/api/governance`)
+
+#### GET `/api/governance`
+Get governance proposals.
+
+**Query Parameters:**
+- `status`: Filter by proposal status
+- `proposerId`: Filter by proposer
+
+#### POST `/api/governance`
+Create new proposal.
+
+**Request Body:**
+```json
+{
+  "proposerId": "user123",
+  "newRate": 0.12,
+  "description": "Reduce commission rate to 12%"
+}
+```
+
+#### PATCH `/api/governance`
+Vote on proposal.
+
+**Request Body:**
+```json
+{
+  "proposalId": "prop_123",
+  "voterId": "user456",
+  "action": "support"
+}
+```
+
+### Maps API (`/api/maps`)
+
+#### GET `/api/maps?action=geocode`
+Geocode an address to coordinates.
+
+**Query Parameters:**
+- `address`: Address to geocode
+
+#### GET `/api/maps?action=route`
+Get route information between two locations.
+
+**Query Parameters:**
+- `pickup`: Pickup location
+- `destination`: Dropoff location
+
+#### GET `/api/maps?action=nearby`
+Find nearby drivers.
+
+**Query Parameters:**
+- `lat`: Latitude
+- `lng`: Longitude
+- `radius`: Search radius in km
+
+### Payments API (`/api/payments`)
+
+#### POST `/api/payments`
+Process ride payment.
+
+**Request Body:**
+```json
+{
+  "rideId": "ride_123",
+  "amount": 15.50,
+  "fromAddress": "0x...",
+  "toAddress": "0x..."
+}
+```
+
+#### GET `/api/payments`
+Check payment status.
+
+**Query Parameters:**
+- `transactionHash`: Transaction hash to check
+
+### NFT API (`/api/nft`)
+
+#### POST `/api/nft`
+Mint driver NFT.
+
+**Request Body:**
+```json
+{
+  "userId": "driver123",
+  "driverProfile": {
+    "vehicleDetails": "2020 Toyota Camry",
+    "licenseNumber": "DL123456",
+    "verificationStatus": "verified"
+  }
+}
+```
+
+#### GET `/api/nft`
+Get NFT metadata.
+
+**Query Parameters:**
+- `tokenId`: NFT token ID
+
+### WebSocket API (`/api/ws`)
+
+#### GET `/api/ws`
+Get real-time updates.
+
+**Query Parameters:**
+- `action`: Type of update (ride-updates, driver-location, governance-updates)
+- `userId`: User ID for updates
+
+## Environment Variables
+
+Create a `.env.local` file with the following variables:
+
+```bash
+# Base Mini App Configuration
+NEXT_PUBLIC_ONCHAINKIT_API_KEY=your_onchainkit_api_key_here
+NEXT_PUBLIC_BASE_RPC_URL=https://mainnet.base.org
+
+# Database Configuration (if using external database)
+DATABASE_URL=your_database_url_here
+
+# JWT Secret for API authentication
+JWT_SECRET=your_jwt_secret_here
+
+# Farcaster Configuration
+NEXT_PUBLIC_FARCASTER_CLIENT_ID=your_farcaster_client_id_here
+FARCASTER_CLIENT_SECRET=your_farcaster_client_secret_here
+
+# Mapping Service Configuration
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=your_mapbox_token_here
+OPENSTREETMAP_API_KEY=your_openstreetmap_key_here
+
+# NFT Contract Configuration
+NEXT_PUBLIC_DRIVER_NFT_CONTRACT_ADDRESS=0x1234567890123456789012345678901234567890
+DRIVER_NFT_PRIVATE_KEY=your_nft_contract_private_key_here
+
+# Payment Configuration
+NEXT_PUBLIC_PAYMENT_CONTRACT_ADDRESS=0x1234567890123456789012345678901234567890
+
+# WebSocket Configuration
+NEXT_PUBLIC_WS_URL=wss://your-websocket-server.com
+
+# Environment
+NODE_ENV=production
+NEXT_PUBLIC_APP_ENV=production
+```
 
 ## Deployment
 

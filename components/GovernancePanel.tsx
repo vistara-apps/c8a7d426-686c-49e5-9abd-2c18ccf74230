@@ -52,25 +52,71 @@ export function GovernancePanel() {
 
   const handleCreateProposal = async () => {
     if (!newProposalRate || !newProposalDescription) return;
-    
+
     setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsSubmitting(false);
-    setShowCreateProposal(false);
-    setNewProposalRate('');
-    setNewProposalDescription('');
+
+    try {
+      // Create proposal via API
+      const response = await fetch('/api/governance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          proposerId: 'demo-user', // In production, get from authenticated user
+          newRate: parseFloat(newProposalRate),
+          description: newProposalDescription,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create proposal');
+      }
+
+      const proposalData = await response.json();
+      console.log('Proposal created:', proposalData);
+
+      setIsSubmitting(false);
+      setShowCreateProposal(false);
+      setNewProposalRate('');
+      setNewProposalDescription('');
+    } catch (error) {
+      console.error('Error creating proposal:', error);
+      setIsSubmitting(false);
+      // In production, show error message to user
+    }
   };
 
   const handleVote = async (proposalId: string, support: boolean) => {
     setVotingFor(proposalId);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setVotingFor(null);
+
+    try {
+      // Vote on proposal via API
+      const response = await fetch('/api/governance', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          proposalId,
+          voterId: 'demo-user', // In production, get from authenticated user
+          action: support ? 'support' : 'oppose',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to vote on proposal');
+      }
+
+      const updatedProposal = await response.json();
+      console.log('Vote recorded:', updatedProposal);
+
+      setVotingFor(null);
+    } catch (error) {
+      console.error('Error voting on proposal:', error);
+      setVotingFor(null);
+      // In production, show error message to user
+    }
   };
 
   return (

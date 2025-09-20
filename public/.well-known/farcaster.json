@@ -1,0 +1,30 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "frame": {
+    "version": "1",
+    "name": "RideShift",
+    "subtitle": "Built with Zara",
+    "description": "RideShift is a Base Mini App built with Zara.",
+    "iconUrl": "https://0co.to/images/zara-2.png",
+    "homeUrl": "https://c8a7d426686c49e59abd2c18ccf74230-we5h.vercel.app",
+    "splashImageUrl": "https://c8a7d426686c49e59abd2c18ccf74230-we5h.vercel.app/splash.png",
+    "splashBackgroundColor": "#000000",
+    "heroImageUrl": "https://c8a7d426686c49e59abd2c18ccf74230-we5h.vercel.app/image.png",
+    "tagline": "RideShift",
+    "screenshotUrls": [
+      "https://c8a7d426686c49e59abd2c18ccf74230-we5h.vercel.app/screenshot.png",
+      "https://c8a7d426686c49e59abd2c18ccf74230-we5h.vercel.app/screenshot.png"
+    ],
+    "primaryCategory": "social",
+    "tags": [
+      "base",
+      "miniapp",
+      "onchainkit"
+    ],
+    "webhookUrl": "https://c8a7d426686c49e59abd2c18ccf74230-we5h.vercel.app/api/webhook"
+  }
+}

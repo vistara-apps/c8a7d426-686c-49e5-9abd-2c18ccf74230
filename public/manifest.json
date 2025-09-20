@@ -20,7 +20,12 @@
       "https://rideshift.app/screenshot3.png"
     ],
     "primaryCategory": "transportation",
-    "tags": ["rideshare", "transportation", "defi", "governance"],
+    "tags": [
+      "rideshare",
+      "transportation",
+      "defi",
+      "governance"
+    ],
     "heroImageUrl": "https://rideshift.app/hero.png",
     "tagline": "Fairer Fares for Everyone",
     "ogTitle": "RideShift - Decentralized Rideshare",
